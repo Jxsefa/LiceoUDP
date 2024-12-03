@@ -1,16 +1,26 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const { Pool } = require('pg');
+require('dotenv').config(); // Carga las variables del archivo .env
 
-// Configuración de EJS
-app.set('view engine', 'ejs');
-app.set('views', './views');
-
-// Ruta principal
-app.get('/', (req, res) => {
-    res.render('index', { title: 'Inicio' });
+// Configuración de la conexión
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false, // Necesario para conexiones SSL en Neon
+    },
 });
 
+// Configuración para servir archivos estáticos
+app.use(express.static('public'));
+
+// Ruta principal para mostrar index.html
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/html/index.html');
+});
+
+// Inicia el servidor
 app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${1000}`);
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });
