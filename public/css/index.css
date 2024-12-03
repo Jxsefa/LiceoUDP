@@ -1,0 +1,24 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+h1 {
+    color: #333;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.btn-lg {
+    width: 100%;
+}
+
+table {
+    margin-top: 20px;
+}
+
+table th, table td {
+    text-align: center;
+}
