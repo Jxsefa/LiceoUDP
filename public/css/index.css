@@ -1,24 +1,93 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    background-color: #fef9f9;
+    font-family: "Secular One" ;
+    margin: 0;
+    padding: 0;
+}
+
+/* Encabezado */
+header {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    color: #333;
+    font-size: 2.5rem;
+    font-weight: bold; /* Solo el h1 en negritas */
 }
 
-.navbar {
-    margin-bottom: 20px;
+p {
+    font-size: 1rem;
+    font-weight: normal; /* Párrafos con fuente normal */
 }
 
-.btn-lg {
-    width: 100%;
+/* Formulario */
+form {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: normal; /* Texto normal en el formulario */
 }
 
+form label {
+    color: #dc3545;
+    font-weight: normal; /* Etiquetas sin negritas */
+}
+
+form select {
+    font-weight: normal; /* Selector con texto normal */
+}
+
+form button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: normal; /* Botón con texto normal */
+}
+
+form button:hover {
+    background-color: #b02a37;
+}
+
+/* Tabla */
 table {
+    background-color: #fff;
     margin-top: 20px;
+    border: 1px solid #ddd;
+    font-weight: normal; /* Tabla sin texto en negritas */
 }
 
-table th, table td {
-    text-align: center;
+table thead {
+    background-color: #dc3545;
+    color: white;
+    font-weight: normal; /* Encabezados de tabla normales */
+}
+
+table tbody td {
+    font-weight: normal; /* Celdas de la tabla con texto normal */
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Clases personalizadas */
+.bebas-neue-regular {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.secular-one-regular {
+    font-family: "Secular One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }

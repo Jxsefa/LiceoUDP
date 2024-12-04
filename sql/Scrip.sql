@@ -152,120 +152,139 @@ INSERT INTO Horarios (ID_horario, dia, hora_inicio, hora_fin, RUT_profesor, ID_c
 --Nombre de profesores que imparten ingles
 SELECT P.nombre
 FROM Profesor P
-         JOIN Materia M ON P.RUT_profesor = M.RUT_profesor
+JOIN Materia M ON P.RUT_profesor = M.RUT_profesor
 WHERE M.nombre = 'Inglés';
 
 --Nombre de alumno que tiene prom < 5
-SELECT A.nombre, COUNT(DISTINCT A.RUT_alumno) AS cantidad_alumnos
+SELECT A.nombre, COUNT(DISTINCT A.RUT_alumno) AS "cantidad_alumnos"
 FROM Notas N
-         JOIN Alumnos A ON N.ID_alumno = A.RUT_alumno
+JOIN Alumnos A ON N.ID_alumno = A.RUT_alumno
 GROUP BY A.nombre
 HAVING AVG(N.calificacion) < 5.0;
 
---Promedio de un curso en especifico segun su id
-SELECT AVG(N.calificacion) AS promedio_calificaciones, C.nivel AS nombre_curso
+--Promedio de un curso en especifico segun su id (en este caso id=1)
+SELECT C.nivel AS "Curso", AVG(N.calificacion) AS "Promedio_Notas"
 FROM Notas N
-         JOIN Alumnos A ON N.ID_alumno = A.RUT_alumno
-         JOIN Curso C ON A.ID_curso = C.ID_curso
+JOIN Alumnos A ON N.ID_alumno = A.RUT_alumno
+JOIN Curso C ON A.ID_curso = C.ID_curso
 WHERE A.ID_curso = 1
 GROUP BY C.nivel;
 
 --Nombres de los profesores que imparten lenguaje
-SELECT P.nombre
+SELECT P.nombre AS "Profesor"
 FROM Profesor P
-         JOIN Materia M ON P.RUT_profesor = M.RUT_profesor
+JOIN Materia M ON P.RUT_profesor = M.RUT_profesor
 WHERE M.nombre = 'Lenguaje';
 
 
 --En que horario se imparte matematicas
-SELECT hora_inicio, hora_fin FROM Horarios H
-                                      JOIN Materia M ON H.ID_materia = M.ID_materia
+SELECT hora_inicio AS "Inicio", hora_fin AS "Fin" FROM Horarios H
+JOIN Materia M ON H.ID_materia = M.ID_materia
 WHERE M.nombre = 'Matemáticas';
 
 --Nombre y curso de alumnos que tienen notas sobre 6
-SELECT A.nombre AS nombre_alumno, C.nivel AS nombre_curso
+SELECT A.nombre AS "Alumno", C.nivel AS "Curso"
 FROM Alumnos A
-         JOIN Notas N ON A.RUT_alumno = N.ID_alumno
-         JOIN Curso C ON A.ID_curso = C.ID_curso
+JOIN Notas N ON A.RUT_alumno = N.ID_alumno
+JOIN Curso C ON A.ID_curso = C.ID_curso
 WHERE N.calificacion > 6.0
 GROUP BY A.nombre, C.nivel;
 
 
 --Nombre de alumnos que tienen menos del 50% de asistencia
-SELECT A.nombre
+SELECT A.nombre AS "Alumno"
 FROM Alumnos A
-         JOIN Asistencia I ON A.RUT_alumno = I.RUT_alumno
+JOIN Asistencia I ON A.RUT_alumno = I.RUT_alumno
 GROUP BY A.RUT_alumno, A.nombre
 HAVING COUNT(CASE WHEN I.estado = 'Presente' THEN 1 END) < (COUNT(*) * 0.5);
 
 
 --Porcentaje de asistencia de profesores de matematica
 SELECT P.nombre,
-       (COUNT(CASE WHEN A.estado = 'Presente' THEN 1 END) * 100.0) / COUNT(*) AS porcentaje_asistencia
+(COUNT(CASE WHEN A.estado = 'Presente' THEN 1 END) * 100.0) / COUNT(*) AS porcentaje_asistencia
 FROM Asistencia A
-         JOIN Profesor P ON A.RUT_profesor = P.RUT_profesor
-         JOIN Materia M ON A.ID_materia = M.ID_materia
+JOIN Profesor P ON A.RUT_profesor = P.RUT_profesor
+JOIN Materia M ON A.ID_materia = M.ID_materia
 WHERE M.nombre = 'Matemáticas'
 GROUP BY P.nombre;
 
 
 --Nombres de los alumnos que tienen entre 5 y 10 anos
-SELECT A.nombre
+SELECT A.nombre AS "Alumno",
+DATE_PART('year', AGE(A.fecha_nacimiento)) AS "Edad"
 FROM Alumnos A
 WHERE DATE_PART('year', AGE(A.fecha_nacimiento)) BETWEEN 5 AND 10;
 
 
---Telefono del apoderado de un alumno en especifico segiun su rut
-SELECT nombre AS nombre_alumno, telefono_apoderado
+
+--Telefono del apoderado de un alumno en especifico segiun su rut (en este caso rut = 44444444-4)
+SELECT nombre AS "Alumno", telefono_apoderado AS "Telefono Apoderado"
 FROM Alumnos
 WHERE RUT_alumno = '44444444-4';
 
 
 
 --Obtener el promedio de notas por materia de cada alumno
-SELECT A.nombre, M.nombre AS nombre_materia, AVG(N.calificacion) AS promedio
+SELECT A.nombre AS "Alumno", M.nombre AS "Materia",
+ROUND(AVG(N.calificacion), 2) AS "Promedio"
 FROM Alumnos A
-         JOIN Notas N ON A.RUT_alumno = N.ID_alumno
-         JOIN Materia M ON N.ID_materia = M.ID_materia
-GROUP BY A.nombre, M.nombre;
+JOIN Notas N ON A.RUT_alumno = N.ID_alumno
+JOIN Materia M ON N.ID_materia = M.ID_materia
+GROUP BY A.nombre, M.nombre
+ORDER BY A.nombre ASC;
+
 
 
 
 --Nombre del curso con mejor promedio
-SELECT C.nivel AS nombre_curso, AVG(N.calificacion) AS promedio_curso
+SELECT C.nivel AS nombre_curso, ROUND(AVG(N.calificacion),2) AS promedio_curso
 FROM Curso C
-         JOIN Alumnos A ON C.ID_curso = A.ID_curso
-         JOIN Notas N ON A.RUT_alumno = N.ID_alumno
+JOIN Alumnos A ON C.ID_curso = A.ID_curso
+JOIN Notas N ON A.RUT_alumno = N.ID_alumno
 GROUP BY C.nivel
 ORDER BY promedio_curso DESC
-    LIMIT 1;
+LIMIT 1;
 
 
 --Cursos que tienen al menos un alumno con nota bajio 4
-SELECT DISTINCT C.nivel
+SELECT C.nivel AS "Curso",
+COUNT(DISTINCT A.RUT_alumno) AS "Alumnos con nota < 4",
+ROUND(AVG(N.calificacion), 2) AS "Promedio del Curso"
 FROM Curso C
-         JOIN Alumnos A ON C.ID_curso = A.ID_curso
-         JOIN Notas N ON A.RUT_alumno = N.ID_alumno
-WHERE N.calificacion < 4.0;
+JOIN Alumnos A ON C.ID_curso = A.ID_curso
+JOIN Notas N ON A.RUT_alumno = N.ID_alumno
+WHERE N.calificacion < 4.0
+GROUP BY C.nivel
+ORDER BY C.nivel ASC;
+
 
 
 
 --Un listado de los profesores y que materia imparte cada uno
-SELECT P.nombre, COUNT(M.ID_materia) AS total_materias
+SELECT P.nombre AS "Profesor", P.correo AS "Correo", P.telefono AS "Teléfono",
+COUNT(DISTINCT M.ID_materia) AS "Total Materias",
+COUNT(DISTINCT A.RUT_alumno) AS "Total Alumnos"
 FROM Profesor P
-         JOIN Materia M ON P.RUT_profesor = M.RUT_profesor
-GROUP BY P.nombre;
+JOIN Materia M ON P.RUT_profesor = M.RUT_profesor
+LEFT JOIN Notas N ON M.ID_materia = N.ID_materia
+LEFT JOIN Alumnos A ON N.ID_alumno = A.RUT_alumno
+GROUP BY P.nombre, P.correo, P.telefono
+ORDER BY P.nombre ASC;
 
 
 
 --Nombres de los profesores con peor asistencia
-SELECT P.nombre,
-       (COUNT(CASE WHEN A.estado = 'Presente' THEN 1 END) * 100.0 / COUNT(*)) AS porcentaje_asistencia
+SELECT P.nombre AS "Profesor",
+COUNT(*) AS "Total Clases",
+COUNT(CASE WHEN A.estado = 'Presente' THEN 1 END) AS "Asistencias",
+COUNT(CASE WHEN A.estado = 'Ausente' THEN 1 END) AS "Ausencias",
+ROUND((COUNT(CASE WHEN A.estado = 'Presente' THEN 1 END) * 100.0 / COUNT(*)), 2) AS "Porcentaje Asistencia"
 FROM Profesor P
-         JOIN Asistencia A ON P.RUT_profesor = A.RUT_profesor
+JOIN Asistencia A ON P.RUT_profesor = A.RUT_profesor
 GROUP BY P.nombre
-ORDER BY porcentaje_asistencia ASC
-    LIMIT 1;
+ORDER BY "Porcentaje Asistencia" ASC
+LIMIT 1;
+
 
 
 --Uso de ALTER
