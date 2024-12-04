@@ -150,25 +150,32 @@ INSERT INTO Horarios (ID_horario, dia, hora_inicio, hora_fin, RUT_profesor, ID_c
 --Consultas establecidas en informe para mostrar funcionamiento.
 
 --Nombre de profesores que imparten ingles
-SELECT P.nombre
+SELECT P.nombre AS "Profesor", P.correo AS "Email", P.telefono AS "Telefono",
+M.nombre AS "Materia"
 FROM Profesor P
 JOIN Materia M ON P.RUT_profesor = M.RUT_profesor
 WHERE M.nombre = 'Inglés';
 
---Nombre de alumno que tiene prom < 5
-SELECT A.nombre, COUNT(DISTINCT A.RUT_alumno) AS "cantidad_alumnos"
-FROM Notas N
-JOIN Alumnos A ON N.ID_alumno = A.RUT_alumno
-GROUP BY A.nombre
-HAVING AVG(N.calificacion) < 5.0;
 
---Promedio de un curso en especifico segun su id (en este caso id=1)
-SELECT C.nivel AS "Curso", AVG(N.calificacion) AS "Promedio_Notas"
+
+--Nombre de alumno que tiene prom < 5
+SELECT A.nombre AS "Nombre", C.nivel AS "Curso",
+AVG(N.calificacion) AS "Promedio notas"
 FROM Notas N
 JOIN Alumnos A ON N.ID_alumno = A.RUT_alumno
 JOIN Curso C ON A.ID_curso = C.ID_curso
-WHERE A.ID_curso = 1
-GROUP BY C.nivel;
+GROUP BY A.nombre, C.nivel
+HAVING AVG(N.calificacion) < 5.0
+ORDER BY "Promedio notas" ASC;
+;
+
+--Promedio de un curso en especifico segun su id (en este caso id=1)
+SELECT P.nombre AS "Profesor", P.correo AS "Email", P.telefono AS "Teléfono",
+M.nombre AS "Materia"
+FROM Profesor P
+JOIN Materia M ON P.RUT_profesor = M.RUT_profesor
+WHERE M.nombre = 'Lenguaje';
+
 
 --Nombres de los profesores que imparten lenguaje
 SELECT P.nombre AS "Profesor"
