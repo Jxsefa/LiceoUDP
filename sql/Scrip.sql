@@ -292,8 +292,6 @@ GROUP BY P.nombre
 ORDER BY "Porcentaje Asistencia" ASC
 LIMIT 1;
 
-
-
 --Uso de ALTER
 
 ALTER TABLE Profesor ADD COLUMN direccion VARCHAR(255);
