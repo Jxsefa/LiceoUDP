@@ -80,17 +80,25 @@
 </section>
     <section class="mt-4">
         <h2 class="text-center text-danger mb-3">Eliminar</h2>
-        <form id="EliminarForm" class="bg-light p-4 rounded shadow">
-            <div class="mb-3">
-                <label for="consulta" class="form-label">Seleccione una tabla</label>
-                <select class="form-select" id="eliminar" name="eliminar" required>
-                    <option value="1">Profesor</option>
-                    <option value="2">Alumno</option>
-                    <option value="3">Materia</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-danger w-100">Eliminar registro</button>
+        <form id="eliminarForm">
+            <label for="tabla">Selecciona la tabla:</label>
+            <select id="tabla" name="tabla" required>
+                <option value="Directiva_de_profesores">Directiva de Profesores</option>
+                <option value="Curso">Curso</option>
+                <option value="Profesor">Profesor</option>
+                <option value="Materia">Materia</option>
+                <option value="Alumnos">Alumnos</option>
+                <option value="Notas">Notas</option>
+                <option value="Asistencia">Asistencia</option>
+                <option value="Horarios">Horarios</option>
+            </select>
+
+            <label for="valor">Ingresa el valor de la clave primaria:</label>
+            <input type="text" id="valor" name="valor" required placeholder="Ej: 12345678-9 o 1">
+
+            <button type="submit">Eliminar</button>
         </form>
+        <script src="script.js"></script>
     </section>
     </section>
     <section class="mt-4">
@@ -166,6 +174,34 @@
             tableBody.appendChild(tr);
         });
     }
+
+
+    document.getElementById('eliminarForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const tabla = document.getElementById('tabla').value;
+        const valor = document.getElementById('valor').value;
+
+        try {
+            const response = await fetch('/eliminar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ tabla, valor }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(result.message);
+            } else {
+                alert(result.error);
+            }
+        } catch (err) {
+            alert('Error de conexión con el servidor.');
+        }
+    });
 </script>
 </body>
 </html>

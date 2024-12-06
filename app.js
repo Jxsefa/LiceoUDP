@@ -203,6 +203,118 @@ app.post('/consultas', async (req, res) => {
 //ACTUALIZAR LO MISMA LOGICA (EJEMPLO TABLA PROFESOR PONES EL ID DEL PROFE Y QUE SE CAMBIA EL NUMERO DE TELEFONO)
 
 
+//eliminar datos
+
+app.post('/eliminar', async (req, res) => {
+const { tabla, valor } = req.body;
+
+if (!tabla || !valor) {
+    return res.status(400).json({ error: 'Debe seleccionar una tabla y proporcionar un valor.' });
+}
+
+let clavePrimaria;
+switch (tabla) {
+    case 'Directiva_de_profesores':
+        clavePrimaria = 'ID_Directiva';
+        break;
+    case 'Curso':
+        clavePrimaria = 'ID_Curso';
+        break;
+    case 'Profesor':
+        clavePrimaria = 'RUT_profesor';
+        break;
+    case 'Materia':
+        clavePrimaria = 'ID_materia';
+        break;
+    case 'Alumnos':
+        clavePrimaria = 'Rut_alumno';
+        break;
+    case 'Notas':
+        clavePrimaria = 'ID_nota';
+        break;
+    case 'Asistencia':
+        clavePrimaria = 'ID_asistencia';
+        break;
+    case 'Horarios':
+        clavePrimaria = 'ID_horario';
+        break;
+    default:
+        return res.status(400).json({ error: 'Tabla no válida.' });
+}
+
+try {
+    const query = `DELETE FROM ${tabla} WHERE ${clavePrimaria} = $1`;
+    const result = await pool.query(query, [valor]);
+
+    if (result.rowCount === 0) {
+        return res.status(404).json({ error: 'No se encontró un registro con ese valor.' });
+    }
+
+    res.json({ message: `Registro eliminado de la tabla ${tabla} con ${clavePrimaria} = ${valor}.` });
+} catch (err) {
+    console.error('Error al eliminar registro:', err);
+    res.status(500).json({ error: 'Ocurrió un error al eliminar el registro.' });
+}
+});
+
+
+//ingresos.
+app.post('/ingresar', async (req, res) => {
+    const { tabla, datos } = req.body;
+
+    if (!tabla || !datos) {
+        return res.status(400).json({ error: 'Debe seleccionar una tabla y proporcionar los datos.' });
+    }
+
+    let query = '';
+    let values = [];
+
+    switch (tabla) {
+        case 'Directiva_de_profesores':
+            query = `INSERT INTO Directiva_de_profesores (nombre, cargo) VALUES ($1, $2)`;
+            values = [datos.nombre, datos.cargo];
+            break;
+        case 'Curso':
+            query = `INSERT INTO Curso (nivel, cantidad_alumnos) VALUES ($1, $2)`;
+            values = [datos.nivel, datos.cantidad_alumnos];
+            break;
+        case 'Profesor':
+            query = `INSERT INTO Profesor (RUT_profesor, telefono, correo, ID_directiva) VALUES ($1, $2, $3, $4)`;
+            values = [datos.RUT_profesor, datos.telefono, datos.correo, datos.ID_directiva];
+            break;
+        case 'Materia':
+            query = `INSERT INTO Materia (nombre, RUT_profesor) VALUES ($1, $2)`;
+            values = [datos.nombre, datos.RUT_profesor];
+            break;
+        case 'Alumnos':
+            query = `INSERT INTO Alumnos (RUT_alumno, nombre, fecha_nacimiento, direccion, telefono_apoderado, ID_curso) VALUES ($1, $2, $3, $4, $5, $6)`;
+            values = [datos.RUT_alumno, datos.nombre, datos.fecha_nacimiento, datos.direccion, datos.telefono_apoderado, datos.ID_curso];
+            break;
+        case 'Notas':
+            query = `INSERT INTO Notas (nota, ID_alumno, ID_materia) VALUES ($1, $2, $3)`;
+            values = [datos.nota, datos.ID_alumno, datos.ID_materia];
+            break;
+        case 'Asistencia':
+            query = `INSERT INTO Asistencia (fecha, ID_alumno) VALUES ($1, $2)`;
+            values = [datos.fecha, datos.ID_alumno];
+            break;
+        case 'Horarios':
+            query = `INSERT INTO Horarios (hora, ID_materia, ID_profesor) VALUES ($1, $2, $3)`;
+            values = [datos.hora, datos.ID_materia, datos.ID_profesor];
+            break;
+        default:
+            return res.status(400).json({ error: 'Tabla no válida.' });
+    }
+
+    try {
+        await pool.query(query, values);
+        res.json({ message: `Registro ingresado correctamente en la tabla ${tabla}.` });
+    } catch (err) {
+        console.error('Error al ingresar registro:', err);
+        res.status(500).json({ error: 'Ocurrió un error al ingresar el registro.' });
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor corriendo en http://localhost:${port}`);
