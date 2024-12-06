@@ -279,8 +279,8 @@ app.post('/ingresar', async (req, res) => {
             values = [datos.nivel, datos.cantidad_alumnos];
             break;
         case 'Profesor':
-            query = `INSERT INTO Profesor (RUT_profesor, telefono, correo, ID_directiva) VALUES ($1, $2, $3, $4)`;
-            values = [datos.RUT_profesor, datos.telefono, datos.correo, datos.ID_directiva];
+            query = `INSERT INTO Profesor (RUT_profesor, nombre, telefono, correo, ID_directiva) VALUES ($1, $2, $3, $4, $5)`;
+            values = [datos.RUT_profesor, datos.nombre, datos.telefono, datos.correo, datos.ID_directiva];
             break;
         case 'Materia':
             query = `INSERT INTO Materia (nombre, RUT_profesor) VALUES ($1, $2)`;
@@ -291,16 +291,16 @@ app.post('/ingresar', async (req, res) => {
             values = [datos.RUT_alumno, datos.nombre, datos.fecha_nacimiento, datos.direccion, datos.telefono_apoderado, datos.ID_curso];
             break;
         case 'Notas':
-            query = `INSERT INTO Notas (nota, ID_alumno, ID_materia) VALUES ($1, $2, $3)`;
-            values = [datos.nota, datos.ID_alumno, datos.ID_materia];
+            query = `INSERT INTO Notas (calificacion, ID_alumno, ID_materia) VALUES ($1, $2, $3)`;
+            values = [datos.calificacion, datos.RUT_alumno, datos.ID_materia];
             break;
         case 'Asistencia':
-            query = `INSERT INTO Asistencia (fecha, ID_alumno) VALUES ($1, $2)`;
-            values = [datos.fecha, datos.ID_alumno];
+            query = `INSERT INTO Asistencia (fecha, RUT_alumno, estado, RUT_profesor, ID_materia) VALUES ($1, $2, $3, $4, $5)`;
+            values = [datos.fecha, datos.RUT_alumno, datos.estado, datos.RUT_profesor, datos.ID_materia];
             break;
         case 'Horarios':
-            query = `INSERT INTO Horarios (hora, ID_materia, ID_profesor) VALUES ($1, $2, $3)`;
-            values = [datos.hora, datos.ID_materia, datos.ID_profesor];
+            query = `INSERT INTO Horarios (dia, hora_inicio, hora_fin, RUT_profesor, ID_curso, ID_materia) VALUES ($1, $2, $3, $4, $5, $6)`;
+            values = [datos.dia, datos.hora_inicio, datos.hora_fin, datos.RUT_profesor, datos.ID_curso, datos.ID_materia];
             break;
         default:
             return res.status(400).json({ error: 'Tabla no válida.' });
@@ -314,6 +314,7 @@ app.post('/ingresar', async (req, res) => {
         res.status(500).json({ error: 'Ocurrió un error al ingresar el registro.' });
     }
 });
+
 
 
 app.listen(port, () => {

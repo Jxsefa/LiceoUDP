@@ -64,25 +64,41 @@
             <tbody id="tableBody"></tbody>
         </table>
     </section>
+
+
 <section class="mt-4">
     <h2 class="text-center text-danger mb-3">Ingresos</h2>
-    <form id="IngresosForm" class="bg-light p-4 rounded shadow">
-        <div class="mb-3">
-            <label for="consulta" class="form-label">Seleccione una tabla</label>
-            <select class="form-select" id="ingresos" name="ingresos" required>
-                <option value="1">Profesor</option>
-                <option value="2">Alumno</option>
-                <option value="3">Materia</option>
+    <form id="ingresarForm" class="bg-light p-4 rounded shadow">
+        <div class="input-group">
+            <label for="tablaIngreso" class="form-label" style="padding: 5px 10px; padding-bottom: 10px;">Seleccione una tabla:</label>
+            <select class="form-select" id="tablaIngreso" name="tablaIngreso" required style="margin-bottom: 15px;">
+                <option value="Directiva_de_profesores" style="padding: 5px 10px; ">Directiva de Profesores</option>
+                <option value="Curso" style="padding: 5px 10px;">Curso</option>
+                <option value="Profesor" style="padding: 5px 10px;">Profesor</option>
+                <option value="Materia" style="padding: 5px 10px;">Materia</option>
+                <option value="Alumnos" style="padding: 5px 10px;">Alumnos</option>
+                <option value="Notas" style="padding: 5px 10px;">Notas</option>
+                <option value="Asistencia" style="padding: 5px 10px;">Asistencia</option>
+                <option value="Horarios" style="padding: 5px 10px;">Horarios</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-danger w-100">ingresar en tabla</button>
+
+        <div id="camposIngreso"></div>
+
+        <div class="button-group">
+            <button type="submit" class="btn btn-danger w-100" style = >Ingresar</button>
+        </div>
     </form>
+    <script src="script.js"></script>
 </section>
+
+
+
     <section class="mt-4">
         <h2 class="text-center text-danger mb-3">Eliminar</h2>
         <form id="eliminarForm">
             <label for="tabla">Selecciona la tabla:</label>
-            <select id="tabla" name="tabla" required>
+            <select id="tabla" name="tabla" required style="margin-bottom: 15px;">
                 <option value="Directiva_de_profesores">Directiva de Profesores</option>
                 <option value="Curso">Curso</option>
                 <option value="Profesor">Profesor</option>
@@ -96,7 +112,7 @@
             <label for="valor">Ingresa el valor de la clave primaria:</label>
             <input type="text" id="valor" name="valor" required placeholder="Ej: 12345678-9 o 1">
 
-            <button type="submit">Eliminar</button>
+            <button type="submit" class="btn btn-danger w-100" style = >Eliminar</button>
         </form>
         <script src="script.js"></script>
     </section>
@@ -115,7 +131,7 @@
     </section>
 </div>
 <script>
-    const form = document.getElementById('consultaForm'); // CREAR PARA CADA FUNCION (actualizarForm, EliminarForm, IngresosForm)
+    const form = document.getElementById('consultaForm');
     const tableHeader = document.getElementById('tableHeader');
     const tableBody = document.getElementById('tableBody');
     const spinner = document.getElementById('spinner');
@@ -202,6 +218,214 @@
             alert('Error de conexión con el servidor.');
         }
     });
+
+    //FORMULARIO PARA INGRESAR
+    document.getElementById('ingresarForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const tabla = document.getElementById('tablaIngreso').value;
+        const formData = new FormData(e.target);
+
+
+        const datos = {};
+        formData.forEach((value, key) => {
+            datos[key] = value;
+        });
+
+        try {
+
+            const response = await fetch('/ingresar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ tabla, datos }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(result.message);
+            } else {
+                alert(result.error);
+            }
+        } catch (err) {
+            alert('Error de conexión con el servidor.');
+        }
+    });
+
+
+    document.getElementById('tablaIngreso').addEventListener('change', (e) => {
+        const tabla = e.target.value;
+        const camposIngreso = document.getElementById('camposIngreso');
+
+
+        camposIngreso.innerHTML = '';
+
+
+        switch (tabla) {
+            case 'Directiva_de_profesores':
+                camposIngreso.innerHTML = `
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="nombre" style="padding: 5px 10px; padding-top: 10px;">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Pedro Pérez">
+                </div>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="cargo" style="padding: 5px 10px;">Cargo:</label>
+                    <input type="text" id="cargo" name="cargo" required placeholder="Ej: Director">
+                </div>
+            `;
+                break;
+            case 'Curso':
+                camposIngreso.innerHTML = `
+                <div class="input-group" style=" padding: 5px 10px; padding-bottom: 10px;>
+                    <label for="nivel">Nivel:</label>
+                    <input type="text" id="nivel" name="nivel" required placeholder="Ej: 1° Básico">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
+                    <label for="cantidad_alumnos">Cantidad de Alumnos:</label>
+                    <input type="number" id="cantidad_alumnos" name="cantidad_alumnos" required>
+                </div>
+            `;
+                break;
+            case 'Profesor':
+                camposIngreso.innerHTML = `
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
+                    <label for="RUT_profesor">RUT del Profesor:</label>
+                    <input type="text" id="RUT_profesor" name="RUT_profesor" required placeholder="Ej: 12345678-9">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
+                    <label for="nombre">Nombre del Profesor:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
+                    <label for="telefono">Teléfono:</label>
+                    <input type="text" id="telefono" name="telefono" required placeholder="Ej: 987654321">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
+                    <label for="correo">Correo:</label>
+                    <input type="email" id="correo" name="correo" required placeholder="Ej: ejemplo@correo.com">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="ID_directiva">ID Directiva:</label>
+                    <input type="number" id="ID_directiva" name="ID_directiva" required placeholder="Ej: 1">
+                </div>
+            `;
+                break;
+            case 'Materia':
+                camposIngreso.innerHTML = `
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Matemáticas">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="RUT_profesor">RUT Profesor:</label>
+                    <input type="text" id="RUT_profesor" name="RUT_profesor" required placeholder="Ej: 12345678-9">
+                </div>
+            `;
+                break;
+            case 'Alumnos':
+                camposIngreso.innerHTML = `
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="RUT_alumno">RUT del Alumno:</label>
+                    <input type="text" id="RUT_alumno" name="RUT_alumno" required placeholder="Ej: 11111111-1">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Ej: Pedro Alonzo">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="direccion">Dirección:</label>
+                    <input type="text" id="direccion" name="direccion" required placeholder="Ej: Calle A, 123">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="telefono_apoderado">Teléfono Apoderado:</label>
+                    <input type="number" id="telefono_apoderado" name="telefono_apoderado" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="ID_curso">ID Curso:</label>
+                    <input type="number" id="ID_curso" name="ID_curso" required>
+                </div>
+            `;
+                break;
+            case 'Notas':
+                camposIngreso.innerHTML = `
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="calificacion">Nota:</label>
+                    <input type="number" id="calificacion" name="calificacion" required placeholder="Ej: 7">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="RUT_alumno">RUT alumno:</label>
+                    <input type="text" id="RUT_alumno" name="RUT_alumno" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="ID_materia">ID Materia:</label>
+                    <input type="number" id="ID_materia" name="ID_materia" required>
+                </div>
+            `;
+                break;
+            case 'Asistencia':
+                camposIngreso.innerHTML = `
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha" name="fecha" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="RUT_alumno">RUT del alumno:</label>
+                    <input type="text" id="RUT_alumno" name="RUT_alumno" required>
+                </div>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="estado">Estado de asistencia:</label>
+                    <input type="text" id="estado" name="estado" required placeholder="Presente/ausente/justificado">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="RUT_profesor">RUT de profesor:</label>
+                    <input type="text" id="RUT_profesor" name="RUT_profesor" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="ID_materia">ID de la materia:</label>
+                    <input type="text" id="ID_materia" name="ID_materia" required>
+                </div>
+            `;
+                break;
+            case 'Horarios':
+                camposIngreso.innerHTML = `
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="dia">Dia:</label>
+                    <input type="text" id="dia" name="dia" required placeholder="Dia de la semana">
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="hora_inicio">Hora inicio:</label>
+                    <input type="time" id="hora_inicio" name="hora_inicio" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="hora_fin">Hora fin:</label>
+                    <input type="time" id="hora_fin" name="hora_fin" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="RUT_profesor">RUT Profesor:</label>
+                    <input type="text" id="RUT_profesor" name="RUT_profesor" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="ID_curso">ID del curso:</label>
+                    <input type="number" id="ID_curso" name="ID_curso" required>
+                </div>
+                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
+                    <label for="ID_materia">ID de la materia:</label>
+                    <input type="number" id="ID_materia" name="ID_materia" required>
+                </div>
+            `;
+                break;
+            default:
+                camposIngreso.innerHTML = '';
+        }
+    });
+
 </script>
 </body>
 </html>
