@@ -70,7 +70,7 @@
     <h2 class="text-center text-danger mb-3">Ingresos</h2>
     <form id="ingresarForm" class="bg-light p-4 rounded shadow">
         <div class="input-group">
-            <label for="tablaIngreso" class="form-label" style="padding: 5px 10px; padding-bottom: 10px;">Seleccione una tabla:</label>
+            <label for="tablaIngreso" class="form-label" style="padding-right: 10px; padding-bottom: 10px;">Seleccione una tabla:</label>
             <select class="form-select" id="tablaIngreso" name="tablaIngreso" required style="margin-bottom: 15px;">
                 <option value="Directiva_de_profesores" style="padding: 5px 10px; ">Directiva de Profesores</option>
                 <option value="Curso" style="padding: 5px 10px;">Curso</option>
@@ -96,9 +96,9 @@
 
     <section class="mt-4">
         <h2 class="text-center text-danger mb-3">Eliminar</h2>
-        <form id="eliminarForm">
+        <form id="eliminarForm" style="text-align: center;">
             <label for="tabla">Selecciona la tabla:</label>
-            <select id="tabla" name="tabla" required style="margin-bottom: 15px;">
+            <select id="tabla" name="tabla" required style="margin-bottom: 15px; margin-right: 15px;">
                 <option value="Directiva_de_profesores">Directiva de Profesores</option>
                 <option value="Curso">Curso</option>
                 <option value="Profesor">Profesor</option>
@@ -117,19 +117,38 @@
         <script src="script.js"></script>
     </section>
     </section>
+
+
+
     <section class="mt-4">
         <h2 class="text-center text-danger mb-3">Actualizar</h2>
         <form id="actualizarForm" class="bg-light p-4 rounded shadow">
-            <div class="mb-3">
-                <label for="consulta" class="form-label">Seleccione una tabla</label>
-                <select class="form-select" id="actualizar" name="actualizar" required>
-                    <option value="1">Profesor</option>
+            <div class="input-group">
+                <label for="tablaActualizar" class="form-label" style="padding-right: 10px; padding-bottom: 10px;">Seleccione una tabla:</label>
+                <select class="form-select" id="tablaActualizar" name="tablaActualizar" required style="margin-bottom: 15px;">
+                    <option value="Directiva_de_profesores" style="padding: 5px 10px; ">Directiva de Profesores</option>
+                    <option value="Curso" style="padding: 5px 10px;">Curso</option>
+                    <option value="Profesor" style="padding: 5px 10px;">Profesor</option>
+                    <option value="Materia" style="padding: 5px 10px;">Materia</option>
+                    <option value="Alumnos" style="padding: 5px 10px;">Alumnos</option>
+                    <option value="Notas" style="padding: 5px 10px;">Notas</option>
+                    <option value="Asistencia" style="padding: 5px 10px;">Asistencia</option>
+                    <option value="Horarios" style="padding: 5px 10px;">Horarios</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-danger w-100">Eliminar registro</button>
+
+            <div id="camposActualizar"></div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-danger w-100" style = >Ingresar</button>
+            </div>
         </form>
     </section>
 </div>
+
+
+
+
 <script>
     const form = document.getElementById('consultaForm');
     const tableHeader = document.getElementById('tableHeader');
@@ -192,6 +211,11 @@
     }
 
 
+
+
+
+
+    //FORMULARIO PARA ELIMINAR
     document.getElementById('eliminarForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -218,6 +242,9 @@
             alert('Error de conexión con el servidor.');
         }
     });
+
+
+
 
     //FORMULARIO PARA INGRESAR
     document.getElementById('ingresarForm').addEventListener('submit', async (e) => {
@@ -267,162 +294,395 @@
             case 'Directiva_de_profesores':
                 camposIngreso.innerHTML = `
                 <div class="input-group" style="padding-bottom: 10px;">
-                    <label for="nombre" style="padding: 5px 10px; padding-top: 10px;">Nombre:</label>
+                    <label for="nombre" style="padding-right: 10px; padding-top: 10px;">Nombre:</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Ej: Pedro Pérez">
                 </div>
                 <div class="input-group" style="padding-bottom: 10px;">
-                    <label for="cargo" style="padding: 5px 10px;">Cargo:</label>
+                    <label for="cargo" style="padding-right: 10px;">Cargo:</label>
                     <input type="text" id="cargo" name="cargo" required placeholder="Ej: Director">
                 </div>
             `;
                 break;
             case 'Curso':
                 camposIngreso.innerHTML = `
-                <div class="input-group" style=" padding: 5px 10px; padding-bottom: 10px;>
-                    <label for="nivel">Nivel:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="nivel" style="padding-right: 10px;">Nivel:</label>
                     <input type="text" id="nivel" name="nivel" required placeholder="Ej: 1° Básico">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
-                    <label for="cantidad_alumnos">Cantidad de Alumnos:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="cantidad_alumnos" style="padding-right: 10px;">Cantidad de Alumnos:</label>
                     <input type="number" id="cantidad_alumnos" name="cantidad_alumnos" required>
                 </div>
             `;
                 break;
             case 'Profesor':
                 camposIngreso.innerHTML = `
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
-                    <label for="RUT_profesor">RUT del Profesor:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="RUT_profesor" style="padding-right: 10px;">RUT del Profesor:</label>
                     <input type="text" id="RUT_profesor" name="RUT_profesor" required placeholder="Ej: 12345678-9">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
-                    <label for="nombre">Nombre del Profesor:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="nombre" style="padding-right: 10px;">Nombre del Profesor:</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
-                    <label for="telefono">Teléfono:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="telefono" style="padding-right: 10px;">Teléfono:</label>
                     <input type="text" id="telefono" name="telefono" required placeholder="Ej: 987654321">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;>
-                    <label for="correo">Correo:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="correo" style="padding-right: 10px;">Correo:</label>
                     <input type="email" id="correo" name="correo" required placeholder="Ej: ejemplo@correo.com">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="ID_directiva">ID Directiva:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="ID_directiva" style="padding-right: 10px;">ID Directiva:</label>
                     <input type="number" id="ID_directiva" name="ID_directiva" required placeholder="Ej: 1">
                 </div>
             `;
                 break;
             case 'Materia':
                 camposIngreso.innerHTML = `
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="nombre">Nombre:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="nombre" style="padding-right: 10px;">Nombre:</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Ej: Matemáticas">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="RUT_profesor">RUT Profesor:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="RUT_profesor" style="padding-right: 10px;">RUT Profesor:</label>
                     <input type="text" id="RUT_profesor" name="RUT_profesor" required placeholder="Ej: 12345678-9">
                 </div>
             `;
                 break;
             case 'Alumnos':
                 camposIngreso.innerHTML = `
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="RUT_alumno">RUT del Alumno:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="RUT_alumno" style="padding-right: 10px;">RUT del Alumno:</label>
                     <input type="text" id="RUT_alumno" name="RUT_alumno" required placeholder="Ej: 11111111-1">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="nombre">Nombre:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="nombre" style="padding-right: 10px;">Nombre:</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Ej: Pedro Alonzo">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="fecha_nacimiento" style="padding-right: 10px;">Fecha de Nacimiento:</label>
                     <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="direccion">Dirección:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="direccion" style="padding-right: 10px;">Dirección:</label>
                     <input type="text" id="direccion" name="direccion" required placeholder="Ej: Calle A, 123">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="telefono_apoderado">Teléfono Apoderado:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="telefono_apoderado" style="padding-right: 10px;">Teléfono Apoderado:</label>
                     <input type="number" id="telefono_apoderado" name="telefono_apoderado" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="ID_curso">ID Curso:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="ID_curso" style="padding-right: 10px;">ID Curso:</label>
                     <input type="number" id="ID_curso" name="ID_curso" required>
                 </div>
             `;
                 break;
             case 'Notas':
                 camposIngreso.innerHTML = `
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="calificacion">Nota:</label>
-                    <input type="number" id="calificacion" name="calificacion" required placeholder="Ej: 7">
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="calificacion" style="padding-right: 10px;">Nota:</label>
+                    <input type="number" id="calificacion" name="calificacion" step="0.01" required placeholder="Ej: 7">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="RUT_alumno">RUT alumno:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="RUT_alumno" style="padding-right: 10px;">RUT alumno:</label>
                     <input type="text" id="RUT_alumno" name="RUT_alumno" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="ID_materia">ID Materia:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="ID_materia" style="padding-right: 10px;">ID Materia:</label>
                     <input type="number" id="ID_materia" name="ID_materia" required>
                 </div>
             `;
                 break;
             case 'Asistencia':
                 camposIngreso.innerHTML = `
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="fecha">Fecha:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="fecha" style="padding-right: 10px;">Fecha:</label>
                     <input type="date" id="fecha" name="fecha" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="RUT_alumno">RUT del alumno:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="RUT_alumno" style="padding-right: 10px;">RUT del alumno:</label>
                     <input type="text" id="RUT_alumno" name="RUT_alumno" required>
                 </div>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="estado">Estado de asistencia:</label>
-                    <input type="text" id="estado" name="estado" required placeholder="Presente/ausente/justificado">
+                <div class="input-group" style="padding-bottom: 10px;">
+                <label for="estado" style="padding-right: 10px;">Estado:</label>
+                <select id="estado" name="estado" required>
+                    <option value="Presente">Presente</option>
+                    <option value="Ausente">Ausente</option>
+                    <option value="Justificado">Justificado</option>
+                </select>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="RUT_profesor">RUT de profesor:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="RUT_profesor" style="padding-right: 10px;">RUT de profesor:</label>
                     <input type="text" id="RUT_profesor" name="RUT_profesor" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="ID_materia">ID de la materia:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="ID_materia" style="padding-right: 10px;">ID de la materia:</label>
                     <input type="text" id="ID_materia" name="ID_materia" required>
                 </div>
             `;
                 break;
             case 'Horarios':
                 camposIngreso.innerHTML = `
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="dia">Dia:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="dia" style="padding-right: 10px;">Dia:</label>
                     <input type="text" id="dia" name="dia" required placeholder="Dia de la semana">
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="hora_inicio">Hora inicio:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="hora_inicio" style="padding-right: 10px;">Hora inicio:</label>
                     <input type="time" id="hora_inicio" name="hora_inicio" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="hora_fin">Hora fin:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="hora_fin" style="padding-right: 10px;">Hora fin:</label>
                     <input type="time" id="hora_fin" name="hora_fin" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="RUT_profesor">RUT Profesor:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="RUT_profesor" style="padding-right: 10px;">RUT Profesor:</label>
                     <input type="text" id="RUT_profesor" name="RUT_profesor" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="ID_curso">ID del curso:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="ID_curso" style="padding-right: 10px;">ID del curso:</label>
                     <input type="number" id="ID_curso" name="ID_curso" required>
                 </div>
-                <div class="input-group" style="padding: 5px 10px;padding-bottom: 10px;">
-                    <label for="ID_materia">ID de la materia:</label>
+                <div class="input-group" style="padding-bottom: 10px;">
+                    <label for="ID_materia" style="padding-right: 10px;">ID de la materia:</label>
                     <input type="number" id="ID_materia" name="ID_materia" required>
                 </div>
             `;
                 break;
             default:
                 camposIngreso.innerHTML = '';
+        }
+    });
+
+
+
+    //FORMULARIO PARA ACTUALIZAR
+    document.getElementById('actualizarForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const tabla = document.getElementById('tablaActualizar').value;
+        const formData = new FormData(e.target);
+
+        const datos = {};
+        formData.forEach((value, key) => {
+            datos[key] = value;
+        });
+
+        try {
+            const response = await fetch('/actualizar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ tabla, datos }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(result.message);
+            } else {
+                alert(result.error);
+            }
+        } catch (err) {
+            alert('Error de conexión con el servidor.');
+        }
+    });
+
+    document.getElementById('tablaActualizar').addEventListener('change', (e) => {
+        const tabla = e.target.value;
+        const camposActualizar = document.getElementById('camposActualizar');
+
+        camposActualizar.innerHTML = '';
+
+        switch (tabla) {
+            case 'Directiva_de_profesores':
+                camposActualizar.innerHTML = `
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_Directiva" style="padding-right: 10px; padding-top: 10px;">ID Directiva:</label>
+                <input type="number" id="ID_Directiva" name="ID_Directiva" required placeholder="Ej: 1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="nombre" style="padding-right: 10px; padding-top: 10px;">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Pedro Pérez">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="cargo" style="padding-right: 10px;">Cargo:</label>
+                <input type="text" id="cargo" name="cargo" required placeholder="Ej: Director">
+            </div>
+            `;
+                break;
+            case 'Curso':
+                camposActualizar.innerHTML = `
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_Curso" style="padding-right: 10px; padding-top: 10px;">ID Curso:</label>
+                <input type="number" id="ID_Curso" name="ID_Curso" required placeholder="Ej: 1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="nivel" style="padding-right: 10px;">Nivel:</label>
+                <input type="text" id="nivel" name="nivel" required placeholder="Ej: 1° Básico">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="cantidad_alumnos" style="padding-right: 10px;">Cantidad de Alumnos:</label>
+                <input type="number" id="cantidad_alumnos" name="cantidad_alumnos" required>
+            </div>
+            `;
+                break;
+            case 'Profesor':
+                camposActualizar.innerHTML = `
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="RUT_profesor" style="padding-right: 10px;">RUT Profesor:</label>
+                <input type="text" id="RUT_profesor" name="RUT_profesor" required placeholder="Ej: 12345678-9">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="nombre" style="padding-right: 10px;">Nombre del Profesor:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Juan Pérez">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="telefono" style="padding-right: 10px;">Teléfono:</label>
+                <input type="text" id="telefono" name="telefono" required placeholder="Ej: 987654321">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="correo" style="padding-right: 10px;">Correo:</label>
+                <input type="email" id="correo" name="correo" required placeholder="Ej: ejemplo@correo.com">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_directiva" style="padding-right: 10px;">ID Directiva:</label>
+                <input type="number" id="ID_directiva" name="ID_directiva" required placeholder="Ej: 1">
+            </div>
+            `;
+                break;
+            case 'Materia':
+                camposActualizar.innerHTML = `
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_materia" style="padding-right: 10px;">ID Materia:</label>
+                <input type="number" id="ID_materia" name="ID_materia" required placeholder="Ej: 1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="nombre" style="padding-right: 10px;">Nombre de Materia:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Matemáticas">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="RUT_profesor" style="padding-right: 10px;">RUT Profesor:</label>
+                <input type="text" id="RUT_profesor" name="RUT_profesor" required placeholder="Ej: 12345678-9">
+            </div>
+            `;
+                break;
+            case 'Alumnos':
+                camposActualizar.innerHTML = `
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="RUT_alumno" style="padding-right: 10px;">RUT Alumno:</label>
+                <input type="text" id="RUT_alumno" name="RUT_alumno" required placeholder="Ej: 11111111-1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="nombre" style="padding-right: 10px;">Nombre del Alumno:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej: Pedro Alonzo">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="fecha_nacimiento" style="padding-right: 10px;">Fecha de Nacimiento:</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="direccion" style="padding-right: 10px;">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" required placeholder="Ej: Calle A, 123">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="telefono_apoderado" style="padding-right: 10px;">Teléfono Apoderado:</label>
+                <input type="number" id="telefono_apoderado" name="telefono_apoderado" required>
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_curso" style="padding-right: 10px;">ID Curso:</label>
+                <input type="number" id="ID_curso" name="ID_curso" required>
+            </div>
+            `;
+                break;
+            case 'Notas':
+                camposActualizar.innerHTML = `
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_nota" style="padding-right: 10px;">ID Nota:</label>
+                <input type="number" id="ID_nota" name="ID_nota" required placeholder="Ej: 1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="calificacion" style="padding-right: 10px;">Calificación:</label>
+                <input type="number" id="calificacion" name="calificacion" step="0.01" required placeholder="Ej: 6.5">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_alumno" style="padding-right: 10px;">ID Alumno:</label>
+                <input type="text" id="ID_alumno" name="ID_alumno" required placeholder="Ej: 12345678-9">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_materia" style="padding-right: 10px;">ID Materia:</label>
+                <input type="number" id="ID_materia" name="ID_materia" required placeholder="Ej: 1">
+            </div>
+            `;
+                break;
+            case 'Asistencia':
+                camposActualizar.innerHTML = `
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_asistencia" style="padding-right: 10px;">ID Asistencia:</label>
+                <input type="number" id="ID_asistencia" name="ID_asistencia" required placeholder="Ej: 1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="fecha" style="padding-right: 10px;">Fecha:</label>
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="estado" style="padding-right: 10px;">Estado:</label>
+                <select id="estado" name="estado" required>
+                    <option value="Presente">Presente</option>
+                    <option value="Ausente">Ausente</option>
+                    <option value="Justificado">Justificado</option>
+                </select>
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="RUT_alumno" style="padding-right: 10px;">RUT Alumno:</label>
+                <input type="text" id="RUT_alumno" name="RUT_alumno" required placeholder="Ej: 11111111-1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="RUT_profesor" style="padding-right: 10px;">RUT Profesor:</label>
+                <input type="text" id="RUT_profesor" name="RUT_profesor" required placeholder="Ej: 12345678-9">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_materia" style="padding-right: 10px;">ID Materia:</label>
+                <input type="number" id="ID_materia" name="ID_materia" required placeholder="Ej: 1">
+            </div>
+            `;
+                break;
+            case 'Horarios':
+                camposActualizar.innerHTML = `
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_horario" style="padding-right: 10px;">ID Horario:</label>
+                <input type="number" id="ID_horario" name="ID_horario" required placeholder="Ej: 1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="dia" style="padding-right: 10px;">Día:</label>
+                <input type="text" id="dia" name="dia" required placeholder="Ej: Lunes">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="hora_inicio" style="padding-right: 10px;">Hora de Inicio:</label>
+                <input type="time" id="hora_inicio" name="hora_inicio" required>
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="hora_fin" style="padding-right: 10px;">Hora de Fin:</label>
+                <input type="time" id="hora_fin" name="hora_fin" required>
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="RUT_profesor" style="padding-right: 10px;">RUT Profesor:</label>
+                <input type="text" id="RUT_profesor" name="RUT_profesor" required placeholder="Ej: 12345678-9">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_curso" style="padding-right: 10px;">ID Curso:</label>
+                <input type="number" id="ID_curso" name="ID_curso" required placeholder="Ej: 1">
+            </div>
+            <div class="input-group" style="padding-bottom: 10px;">
+                <label for="ID_materia" style="padding-right: 10px;">ID Materia:</label>
+                <input type="number" id="ID_materia" name="ID_materia" required placeholder="Ej: 1">
+            </div>
+            `;
+                break;
         }
     });
 

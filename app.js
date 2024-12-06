@@ -203,7 +203,7 @@ app.post('/consultas', async (req, res) => {
 //ACTUALIZAR LO MISMA LOGICA (EJEMPLO TABLA PROFESOR PONES EL ID DEL PROFE Y QUE SE CAMBIA EL NUMERO DE TELEFONO)
 
 
-//eliminar datos
+//ELIMINAR DATOS DE TABLAS
 
 app.post('/eliminar', async (req, res) => {
 const { tabla, valor } = req.body;
@@ -258,7 +258,7 @@ try {
 });
 
 
-//ingresos.
+//INGRESOS TABLAS
 app.post('/ingresar', async (req, res) => {
     const { tabla, datos } = req.body;
 
@@ -315,6 +315,82 @@ app.post('/ingresar', async (req, res) => {
     }
 });
 
+
+
+
+//ACTUALIZAR TABLAS
+app.post('/actualizar', async (req, res) => {
+
+    const { tabla, datos } = req.body;
+
+    if (!tabla || !datos) {
+        return res.status(400).json({ error: 'Debe seleccionar una tabla y proporcionar los datos.' });
+    }
+
+    let query = '';
+    let values = [];
+
+    switch (tabla) {
+        case 'Directiva_de_profesores':
+            query = `UPDATE Directiva_de_profesores
+                     SET nombre = $1, cargo = $2
+                     WHERE ID_Directiva = $3`;
+            values = [datos.nombre, datos.cargo, datos.ID_Directiva];
+            break;
+        case 'Curso':
+            query = `UPDATE Curso
+                     SET nivel = $1, cantidad_alumnos = $2
+                     WHERE ID_Curso = $3`;
+            values = [datos.nivel, datos.cantidad_alumnos, datos.ID_Curso];
+            break;
+        case 'Profesor':
+            query = `UPDATE Profesor
+                     SET nombre = $1, telefono = $2, correo = $3, ID_directiva = $4
+                     WHERE RUT_profesor = $5`;
+            values = [datos.nombre, datos.telefono, datos.correo, datos.ID_directiva, datos.RUT_profesor];
+            break;
+        case 'Materia':
+            query = `UPDATE Materia
+                     SET nombre = $1, RUT_profesor = $2
+                     WHERE ID_materia = $3`;
+            values = [datos.nombre, datos.RUT_profesor, datos.ID_materia];
+            break;
+        case 'Alumnos':
+            query = `UPDATE Alumnos
+                     SET nombre = $1, fecha_nacimiento = $2, direccion = $3, telefono_apoderado = $4, ID_curso = $5
+                     WHERE RUT_alumno = $6`;
+            values = [datos.nombre, datos.fecha_nacimiento, datos.direccion, datos.telefono_apoderado, datos.ID_curso, datos.RUT_alumno];
+            break;
+        case 'Notas':
+            query = `UPDATE Notas
+                     SET calificacion = $1, ID_materia = $2
+                     WHERE ID_nota = $3`;
+            values = [datos.calificacion, datos.ID_materia, datos.ID_nota];
+            break;
+        case 'Asistencia':
+            query = `UPDATE Asistencia
+                     SET fecha = $1, estado = $2, RUT_profesor = $3, ID_materia = $4
+                     WHERE ID_asistencia = $5`;
+            values = [datos.fecha, datos.estado, datos.RUT_profesor, datos.ID_materia, datos.ID_asistencia];
+            break;
+        case 'Horarios':
+            query = `UPDATE Horarios
+                     SET dia = $1, hora_inicio = $2, hora_fin = $3, RUT_profesor = $4, ID_curso = $5, ID_materia = $6
+                     WHERE ID_horario = $7`;
+            values = [datos.dia, datos.hora_inicio, datos.hora_fin, datos.RUT_profesor, datos.ID_curso, datos.ID_materia, datos.ID_horario];
+            break;
+        default:
+            return res.status(400).json({ error: 'Tabla no válida.' });
+    }
+
+    try {
+        await pool.query(query, values);
+        res.json({ message: `Registro actualizado correctamente en la tabla ${tabla}.` });
+    } catch (err) {
+        console.error('Error al actualizar registro:', err);
+        res.status(500).json({ error: 'Ocurrió un error al actualizar el registro.' });
+    }
+});
 
 
 app.listen(port, () => {
